@@ -1,0 +1,156 @@
+CREATE DATABASE Mediver
+DEFAULT CHARACTER SET utf8
+COLLATE utf8_spanish_ci;
+
+USE Mediver;
+
+CREATE TABLE personas
+(
+dni varchar(9), nombre varchar(20), apellidos varchar(50), tipo enum('usuario', 'mediador'),
+PRIMARY KEY(dni)
+)
+engine=innodb;
+
+CREATE TABLE usuarios
+(
+direccion varchar(50), telefono varchar(15), patologia varchar(20), dni varchar(9), FOREIGN KEY (dni) REFERENCES personas(dni) ON DELETE CASCADE ON UPDATE CASCADE
+)
+engine=innodb;
+
+CREATE TABLE mediadores
+(
+email varchar(50), experiencia varchar(50), metodologia varchar(50),
+dni varchar(9), FOREIGN KEY(dni) REFERENCES personas(dni) ON DELETE CASCADE ON UPDATE CASCADE
+)
+engine=innodb;
+
+CREATE TABLE aulas
+(
+descripcion varchar(150), 
+nombre varchar(100),
+numAula int primary key auto_increment  
+)
+engine=innodb;
+
+CREATE TABLE actividades
+(
+nombre varchar(20), descripcion varchar(50), materiales varchar(100),
+id_activ int auto_increment, 
+numAula int,
+primary key(id_activ),
+duracion timestamp DEFAULT current_timestamp,
+FOREIGN KEY(numAula) REFERENCES aulas(numAula)
+)
+engine=innodb;
+
+CREATE TABLE planifican
+(
+fechaIni timestamp NOT NULL DEFAULT current_timestamp,
+fechaFin timestamp CHECK (fechaFin>fechaIni),
+dniUsuario varchar(9), 
+dniMediador varchar(9),
+id_activ int,
+primary key(fechaIni, dniUsuario, dniMediador, id_activ), 
+FOREIGN KEY(dniUsuario) REFERENCES usuarios(dni),
+FOREIGN KEY(dniMediador) REFERENCES mediadores(dni),
+FOREIGN KEY(id_activ) REFERENCES actividades(id_activ)
+)
+engine=innodb;
+
+CREATE TABLE expedientes
+(
+numExpediente int primary key, evaluacion varchar(100), descripPato varchar(100),
+dni varchar(9), FOREIGN KEY(dni) REFERENCES usuarios(dni) ON DELETE CASCADE ON UPDATE CASCADE
+)
+engine=innodb;
+
+INSERT INTO personas (dni, nombre, apellidos , tipo) VALUES("07896542B","María" ,"de la Rosa Benítez" , "mediador");
+INSERT INTO personas (dni, nombre, apellidos , tipo) VALUES("07633345T", "Yohanna", "Gaviro García", "mediador");
+INSERT INTO personas (dni, nombre, apellidos , tipo) VALUES("07765490S","Hilda" , "Pérez Bote", "mediador");
+INSERT INTO personas (dni, nombre, apellidos , tipo) VALUES("77098621M","Nazaret" , "Gallego Sánchez" ,"mediador");
+INSERT INTO personas (dni, nombre, apellidos , tipo) VALUES("70796584N","Pedro" , "Galán Prado" , "mediador");
+INSERT INTO personas (dni, nombre, apellidos , tipo) VALUES("77093215P","Alba" , "Megías Gonzalez" , "mediador");
+INSERT INTO personas (dni, nombre, apellidos , tipo) VALUES("61098987J","Luis Francisco" , "Ferreira Prieto","mediador");
+INSERT INTO personas (dni, nombre, apellidos , tipo) VALUES("0596870H","Cristina" , "Iglesias Roso"  , "mediador");
+INSERT INTO personas (dni, nombre, apellidos , tipo) VALUES("090967543D","Manuel" , "Fernández Collado" , "usuario");
+INSERT INTO personas (dni, nombre, apellidos , tipo) VALUES("66098746T","Antonia" , "García Cámara" ,"usuario");
+INSERT INTO personas (dni, nombre, apellidos , tipo) VALUES("04096652E","Carmen" , "Mancera Barba","usuario");
+INSERT INTO personas (dni, nombre, apellidos , tipo) VALUES("08076511F","Fernando" , "Sánchez Sánchez","usuario");
+INSERT INTO personas (dni, nombre, apellidos , tipo) VALUES("99870421Q","Elsa" , "Nieto Moreno","usuario");
+INSERT INTO personas (dni, nombre, apellidos , tipo) VALUES("01013458Z","Nazareth", "Montero Nievas","usuario");
+INSERT INTO personas (dni, nombre, apellidos , tipo) VALUES("09091120G","Miguel Ángel", "Nieto Hidalgo","usuario");
+INSERT INTO personas (dni, nombre, apellidos , tipo) VALUES("23451245C","Ana" , "García Expóxito","usuario");
+INSERT INTO personas (dni, nombre, apellidos , tipo) VALUES("55096412E","Lole", "Montero Méndez","usuario");
+INSERT INTO personas (dni, nombre, apellidos , tipo) VALUES("40406979L","Adrián", "Carillo Miranda" ,"usuario");
+
+INSERT INTO aulas (descripcion, nombre) VALUES("Aula destinada a la enseñanza de idiomas y para el desarrollo auditivo y visual.","Aula Peter Pan");
+INSERT INTO aulas (descripcion, nombre) VALUES("Aula destinada a la realización de actividades que fomenten el desarrollo físico.","Aula del Movimiento");
+INSERT INTO aulas (descripcion, nombre) VALUES("Aula destinada a la realización de actividades de tipo juegos para el desarrollo intelectual.","País de las Maravillas");
+INSERT INTO aulas (descripcion, nombre) VALUES("Aula destinada a la realización de actividades con una metodología rutinaria.","Mundo de los sentidos");
+
+INSERT INTO mediadores (email, experiencia, metodologia, dni) VALUES("mariadlrosa@mediver.com" , "Usuarios con problemas de audicion" , "Incorporar en las actividades la lengua de signos", "07896542B");
+INSERT INTO mediadores (email, experiencia, metodologia, dni) VALUES("yohannagaviro@mediver.com" , "Usuarios de 2 a 10 años" , "Aprender jugando", "07633345T");
+INSERT INTO mediadores (email, experiencia, metodologia, dni) VALUES("hildaperez@mediver.com" , "Usuarios con problemas en el desarrollo del lenguaje" , "Actividades psicolinguísticas", "07765490S");
+INSERT INTO mediadores (email, experiencia, metodologia, dni) VALUES("nazagallego@mediver.com" , "Usuarios TEA" , "Actividades rutinarias","77098621M");
+INSERT INTO mediadores (email, experiencia, metodologia, dni) VALUES("pedrogalan@mediver.com" , "Usuarios con problemas visuales" , "Diseño de actividades con manualidades", "70796584N");
+INSERT INTO mediadores (email, experiencia, metodologia, dni) VALUES("albamegias@mediver.com" , "Usuarios con problemas de movilidad" , "Actividades psicomotoras", "61098987J");
+INSERT INTO mediadores (email, experiencia, metodologia, dni) VALUES("luisferreira@mediver.com" , "Usuarios con problemas en el desarrollo intelectual" , "Mantener la mente activa", "61098987J");
+INSERT INTO mediadores (email, experiencia, metodologia, dni) VALUES("crisiglesias@mediver.com" , "Usuarios con TEA" , "Incentivar la atención" , "0596870H");
+
+INSERT INTO usuarios (dni, patologia, telefono, direccion) VALUES ("090967543D", "Retraso madurativo y retraso en la adquisición y desarrollo del lenguaje", "675842159", "Calle Duran 12");
+INSERT INTO usuarios (dni, patologia, telefono, direccion) VALUES ("99870421Q", "Retraso madurativo , Sordera congénita ,Epilepsia y Bipolaridad", "615268774", "Calle Garcia Lorca 25");
+INSERT INTO usuarios (dni, patologia, telefono, direccion) VALUES ("66098746T", "Deficiencia auditiva y deficiencia visual", "722594871", "Calle Baños 75");
+INSERT INTO usuarios (dni, patologia, telefono, direccion) VALUES ("04096652E", "TEA", "687945123", "Calle Osorio 51");
+INSERT INTO usuarios (dni, patologia, telefono, direccion) VALUES ("08076511F", "Sordoceguera adquirida", "722541398", "Calle Velazquez 20");
+INSERT INTO usuarios (dni, patologia, telefono, direccion) VALUES ("01013458Z", "Hipoacusia", "674598138", "Calle Nuñez 22");
+INSERT INTO usuarios (dni, patologia, telefono, direccion) VALUES ("09091120G", "TEA", "674582489", "Calle Moza 4");
+INSERT INTO usuarios (dni, patologia, telefono, direccion) VALUES ("23451245C", "Sindrome de Down", "649512002", "Calle Antonio Machado 15");
+INSERT INTO usuarios (dni, patologia, telefono, direccion) VALUES ("55096412E", "Esclerosis Multiple", "722458971", "Calle Villarda 44");
+INSERT INTO usuarios (dni, patologia, telefono, direccion) VALUES ("40406979L", "Retraso madurativo", "610054234", "Calle Cortazar 8");
+
+INSERT INTO actividades (nombre, descripcion, materiales, numAula, duracion) VALUES ("Vamos al taller", "Con los coches “aparcados” en un extremo de la alfombra, ir desplazando uno cada vez (gateando) por la alfombra hasta el taller donde lo arreglaremos con nuestra
+herramientas y lo devolveremos a su sitio correcto por el mismo procedimiento", "Taller de herramientas, Alfombra de trafico, Coches de juguete", 2, "15 minutos");
+INSERT INTO actividades (nombre, descripcion, materiales, numAula, duracion) VALUES ("Veo, Veo", "El mediador dirá una letra y el usuario tendrá que elegir un dibujo que contenga dicha letra a la vez que dice el nombre del objeto que se representa en el dibujo", "Fotografias o dibujos", 3, "15 minutos");
+INSERT INTO actividades (nombre, descripcion, materiales, numAula, duracion) VALUES ("Trabajando emociones", "En una mesa, mostraremos a la usuaria una foto de una persona de su entorno , actividades que realice diariamente y objetos rutinarios (alimentos, cosas del hogar , juguetes...) .
+Le pediremos que nos indique quién o qué es lo de la foto y acto seguido le preguntaremos cómo se siente al observarla , a lo que ella tendrá que contestar dibujando en un folio un emoticono que represente esa emoción", "Folios, Lapiz, Fotos o dibujos, Objetos cotidianos", 4, "30 minutos");
+INSERT INTO actividades (nombre, descripcion, materiales, numAula, duracion) VALUES ("Ampliemos vocabulario", "En una mesa, mostraremos a la usuaria el objeto que hayamos elegido
+para ampliar el vocabulario, pondremos sus manos en el objeto, haremos que lo reconozca,
+que lo huela, que lo toque (observaremos en todo momento la expresión no verbal de nuestra
+usuaria, para darle después un significado: por ejemplo, si es algo con textura pegajosa,
+observaremos si pone cara de asco al tocarlo, para darle un sentido a esa emoción), una vez lo
+haya tocado, le enseñamos la imagen en papel, con el nombre escrito, después le haremos el
+signo que corresponda al objeto, pidiéndole que nos coja la muñeca con su mano", "Objetos cotidianos", 4, "30 minutos");
+INSERT INTO actividades (nombre, descripcion, materiales, numAula, duracion) VALUES ("Movilidad en espacios interiores", "En la zona o aula de nuestro lugar de trabajo. La actividad consiste en un primer lugar, colocar un objeto identificativo de cada estancia en la puerta de entrada a la misma, los cuales irán acompañados del nombre y en segundo lugar, elaboraremos un mapa en relieve con los nombres de cada estancia que le sirva a nuestra usuaria para orientarse o para indicarle a otras personas donde quiere ir o para que otras personas le indiquen donde debe ir ella.", "Objetos cotidianos, Folios, Materiales de diferentes texturas", 2, "40 minutos");
+INSERT INTO actividades (nombre, descripcion, materiales, numAula, duracion) VALUES ("Pasarela", "Con cuerdas y conos , el mediador deberá crear un circuito para que el usuario ande sin salirse de él a la vez que esquiva los conos.
+Primeramente se agarrará al usuario hasta que coja la suficiente soltura", "Cuerdas, Conos de trafico", 2, "30 minutos");
+INSERT INTO actividades (nombre, descripcion, materiales, numAula, duracion) VALUES ("LSE", "A través de pictogramas , se le mostrará la acción o el objeto a enseñar mientras que se le va mostrando el signo correspondiente", "Pictogramas", 1, "1 hora");
+INSERT INTO actividades (nombre, descripcion, materiales, numAula, duracion) VALUES ("Conociendo mi entorno", "El mediador le enseñará a desplazarse por su hogar y barrio  enseñandole primeramente a leer un mapa de los lugares a recorrer . Después pasearán por la zona colocando la mano del usuario sobre paredes , barandillas y elementos identificativos del lugar sirviéndole al usuario como referencia", "Mapas con diferentes texturas, Vehiculo de la empresa", 4, "1 hora");
+INSERT INTO actividades (nombre, descripcion, materiales, numAula, duracion) VALUES ("LSE adaptada", "Con objetos y figuras , se le colocarán las manos sobre el objeto / figura a enseñar para que el usuario lo reconozca con el tacto a la vez que vocalizando se le repetirá un par de veces el nombre de dicho elemento . Una vez reconocido el objeto , el mediador cogerá las manos del usuario y las colocará sobre las suyas para mostrarle el signo correspondiente", "Objetos o figuras", 4, "30 minutos");
+INSERT INTO actividades (nombre, descripcion, materiales, numAula, duracion) VALUES ("LSE y lectura labial", "A través de imágenes , se le enseñará al usuario el signo correspondiente mientras que se vocaliza el nombre del objeto .
+Se realizarán actividades bucofonatorias para que aprenda las diferentes posiciones de los labios al gesticular palabras", "Tablet", 1, "1 hora");
+INSERT INTO actividades (nombre, descripcion, materiales, numAula, duracion) VALUES ("Conectando con mi entorno", "El mediador realizará actividades con el usuario basados en el sistema de la comunicación simulando objetos tecnológicos(móvil , ordenador , tablets) en las que el usuario deberá de comunicarse mediante el sistema oral", "Carton, Vasos de plastico, Hilo, Imagenes, Pictogramas", 1, "1 hora");
+INSERT INTO actividades (nombre, descripcion, materiales, numAula, duracion) VALUES ("Pantalla inteligente", "El usuario hará uso de uno de los equipos del aula donde el mediador habrá seleccionado actividades para que el usuario mantenga la mirada mientras repite palabras o frases oralmente", "Pantalla inteligente", 1, "30 minutos");
+INSERT INTO actividades (nombre, descripcion, materiales, numAula, duracion) VALUES ("Paseo a caballo", "El mediador acudirá al centro ecuestre con el usuario dos veces por semana parta que , mediante la equitación el usuario trabaje la motricidad gruesa y estimule los músculos de las piernas", "", 2, "40 minutos");
+INSERT INTO actividades (nombre, descripcion, materiales, numAula, duracion) VALUES ("Mix", "El mediador y el usuario realizarán actividades para trabajar la motricidad fina (Cuadernos de escritura , Caja de arena Montesorri , Atrapa el globo...)", "Equipo PP (materiales del aula 1)", 1, "1 hora");
+INSERT INTO actividades (nombre, descripcion, materiales, numAula, duracion) VALUES ("Equipo MOV", "El mediador y el usuario realizarán actividades con algunos materiales del aula de Movimiento para estimular la musculatura del usuario (Tira y afloja con cuerdas de diferentes tamaños , uso de mancuernas , pelotas de goma..)", "Equipo MOV (materiales del aula 2)", 2, "30 minutos");
+INSERT INTO actividades (nombre, descripcion, materiales, numAula, duracion) VALUES ("Sistema SERLA", "El mediador iniciará al usuario en el sistema SERGI . El usuario utilizará imágenes  o pictogramas para reforzar la comunicación", "Imagenes, Pictogramas", 1, "40 minutos");
+INSERT INTO actividades (nombre, descripcion, materiales, numAula, duracion) VALUES ("Rompecabezas", "Con un cuaderno de velcro , el usuario deberá ir pegando las letras con velcro al cuaderno , mientras repite varias veces la letra en voz alta , para formar la palabra que represente una imagen pegada por el mediador en dicho cuaderno", "Cuaderno de velcro, Imagenes y letras de velcro", 3, "20 minutos");
+INSERT INTO actividades (nombre, descripcion, materiales, numAula, duracion) VALUES ("¿Que es?", "El mediador le mostrará objetos(juguetes , figuras geométricas) de diferentes tamaños y colores para que el usuario los identifique y describa", "Juguetes, Figuras geometricas", 3, "30 minutos");
+
+INSERT INTO expedientes (numExpediente, evaluacion, descripPato, dni) VALUES (154, "Manuel presenta un retraso madurativo, que se manifiesta en su comportamiento en el colegio  debido a que justo en el periodo de desarrollo del gateo sufrió una hernia y una posterior intervención quirúrgica lo que ocasionó que se produjeran de forma inadecuada el desarrollo del patrón cruzado contralateral que condiciona el desarrollo físico e intelectual. También presenta un retraso de aproximadamente de dos años en la adquisición y desarrollo del lenguaje debido a que la enfermedad y la intervención quirúrgica, provocaron una sobreprotección parental y por consiguente una falta de los necesarios estímulos en el desarrollo del lenguaje . Acompañado de procesos reiterados de otitis que provocan periodos de hipoacusia conductiva y la toma de antibióticos.", "retraso madurativo y retraso en la adquisición y desarrollo del lenguaje.", "090967543D");
+INSERT INTO expedientes (numExpediente, evaluacion, descripPato, dni) VALUES (125, "Mujer sorda de nacimiento de 19 años con edad cognitiva de primero de primaria (entre 5 y 7 años). Diagnosticada de Epilepsia a los 10 años , causante de daños cerebrales en el hemisferio izquierdo provocando problemas de conducta emocional (Bipolaridad).", "Retraso madurativo , Sordera congénita ,Epilepsia y Bipolaridad","99870421Q");
+INSERT INTO expedientes (numExpediente, evaluacion, descripPato, dni) VALUES (156, "Mujer de 40 años de edad, con ningún resto auditivo por sordera profunda congénita. Por otra parte, tiene una pérdida de visión progresiva debido a una catarata tóxica sobrevenida por una lesión laboral. Su nivel funcional es bajo debido a su estatus sociocultural , lo que ha producido que su sistema de comunicación más común sean los signos naturales o dibujos sencillos, así como una comunicación deística que ha desarrollado para informar a su entorno de sus necesidades y peticiones.", "Deficiencia auditiva y deficiencia visual","66098746T");
+INSERT INTO expedientes (numExpediente, evaluacion, descripPato, dni) VALUES (110, "Niña de 7 años con autismo de nivel medio. Tiene un aspecto físico normal pero observamos conducta deambulatoria . No utiliza la mirada para explorar el entorno y su estado de colaboración pasivo. A nivel comunicativo , utiliza signos básicos y pictogramas.", "TEA", "04096652E");
+INSERT INTO expedientes (numExpediente, evaluacion, descripPato, dni) VALUES (187, "Varón de 35 años con lesión craneoencefálica debido a un accidente de tráfico , lo que le ha provocado una sordoceguera . Tiene algún resto auditivo por lo que , se comunica oralmente apoyándose en signos básicos.", "Sordoceguera adquirida", "08076511F");
+INSERT INTO expedientes (numExpediente, evaluacion, descripPato, dni) VALUES (254, "Mujer de 24 años diagnosticada de Swannomatosis (enfermedad neurológica) con múltiples operaciones una de las cuales le provocó una hipoacusia severa y una parálisis facial. La comunicación a nivel de emisor es oral , capta signos básicos a nivel  de receptor.", "Hipoacusia", "01013458Z");
+INSERT INTO expedientes (numExpediente, evaluacion, descripPato, dni) VALUES (178, "Varón de 24 años diagnosticado TEA , Síndrome de Asperger. Muestra un comportamiento pasivo y evasivo a nivel social y una obsesión con la tecnología. No mantiene la mirada cuando se establece comunicación con él pero no muestra movimientos deambulatorios. Su comunicación a nivel de emisor es mediante pictogramas o imágenes con  alguna palabra o frase suelta. Su vocabulario  y comprensión es equivalente a un niño de 10 años.", "TEA", "09091120G");
+INSERT INTO expedientes (numExpediente, evaluacion, descripPato, dni) VALUES (200, "Mujer de 14 años con Síndrome de Down. Muestra un comportamiento activo a nivel social y una obsesión con los animales. Su comunicación a nivel de emisor es mediante el sistema oral. Tiene degeneración muscular causándole problemas en la motricidad fina y gruesa.", "Sindrome de Down", "23451245C");
+INSERT INTO expedientes (numExpediente, evaluacion, descripPato, dni) VALUES (80, "Mujer de 50 años con Esclerósis Múltiple con poca movilidad en las articulaciones anteriores(brazos , manos , boca y cuello). Su sistema de comunicación es el oral lo que le dificulta comunicarse.", "Esclerosis Multiple", "55096412E");
+INSERT INTO expedientes (numExpediente, evaluacion, descripPato, dni) VALUES (327, "Varón de 30 años con una edad cognitiva de 10 años debido a una meningitis que sufrió en la etapa del desarrollo. Su nivel de comunicación es casi nulo . Balbucea y realiza gestos naturales.", "Retraso madurativo", "40406979L");
+
+INSERT INTO planifican (fechaIni, fechaFin, dniUsuario, dniMediador, id_activ) VALUES ("2022-01-13", "2022-04-12 00:00:00", "40406979L", "61098987J", "4");
+INSERT INTO planifican (fechaIni, fechaFin, dniUsuario, dniMediador, id_activ) VALUES ("2022-02-01 16:33:22", "2022-03-29 00:00:00", "55096412E", "07896542B", "6");
+INSERT INTO planifican (fechaIni, fechaFin, dniUsuario, dniMediador, id_activ) VALUES ("2022-04-05 16:36:58", "0000-00-00 00:00:00", "66098746T", "77098621M", "13");
+INSERT INTO planifican (fechaIni, fechaFin, dniUsuario, dniMediador, id_activ) VALUES ("2022-04-01 16:37:14", "0000-00-00 00:00:00", "99870421Q", "07896542B", "8");
+INSERT INTO planifican (fechaIni, fechaFin, dniUsuario, dniMediador, id_activ) VALUES ("2021-12-21 16:41:07", "0000-00-00 00:00:00", "08076511F", "0596870H", "14");
+INSERT INTO planifican (fechaIni, fechaFin, dniUsuario, dniMediador, id_activ) VALUES ("2021-12-08 16:41:32", "0000-00-00 00:00:00", "09091120G", "07765490S", "10");
