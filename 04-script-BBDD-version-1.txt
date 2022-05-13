@@ -150,7 +150,7 @@ INSERT INTO expedientes (numExpediente, evaluacion, descripPato, dni) VALUES (32
 
 INSERT INTO planifican (fechaIni, fechaFin, dniUsuario, dniMediador, id_activ) VALUES ("2022-01-13", "2022-04-12 00:00:00", "40406979L", "61098987J", "4");
 INSERT INTO planifican (fechaIni, fechaFin, dniUsuario, dniMediador, id_activ) VALUES ("2022-02-01 16:33:22", "2022-03-29 00:00:00", "55096412E", "07896542B", "6");
-INSERT INTO planifican (fechaIni, fechaFin, dniUsuario, dniMediador, id_activ) VALUES ("2022-04-05 16:36:58", "0000-00-00 00:00:00", "66098746T", "77098621M", "13");
-INSERT INTO planifican (fechaIni, fechaFin, dniUsuario, dniMediador, id_activ) VALUES ("2022-04-01 16:37:14", "0000-00-00 00:00:00", "99870421Q", "07896542B", "8");
+INSERT INTO planifican (fechaIni, fechaFin, dniUsuario, dniMediador, id_activ) VALUES ("2022-06-05 16:36:58", "0000-00-00 00:00:00", "66098746T", "77098621M", "13");
+INSERT INTO planifican (fechaIni, fechaFin, dniUsuario, dniMediador, id_activ) VALUES ("2022-10-01 16:37:14", "0000-00-00 00:00:00", "99870421Q", "07896542B", "8");
 INSERT INTO planifican (fechaIni, fechaFin, dniUsuario, dniMediador, id_activ) VALUES ("2021-12-21 16:41:07", "0000-00-00 00:00:00", "08076511F", "0596870H", "14");
 INSERT INTO planifican (fechaIni, fechaFin, dniUsuario, dniMediador, id_activ) VALUES ("2021-12-08 16:41:32", "0000-00-00 00:00:00", "09091120G", "07765490S", "10");
